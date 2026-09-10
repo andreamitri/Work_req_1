@@ -17,16 +17,10 @@ function App() {
   const [currentFact, setCurrentFact] = useState<string>(
     "Loading fun facts...",
   );
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/funfacts.json")
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`Failed to load funfacts.json (${res.status})`);
-        }
-        return res.json() as Promise<FunFactsData>;
-      })
+      .then((res) => res.json() as Promise<FunFactsData>)
       .then((data) => {
         setFunFacts(data.funFacts);
         if (data.funFacts.length > 0) {
@@ -35,13 +29,7 @@ function App() {
           setCurrentFact(random.text);
         }
       })
-      .catch((err: unknown) => {
-        setError(
-          err instanceof Error
-            ? err.message
-            : "Unknown error loading fun facts",
-        );
-      });
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
